@@ -7,7 +7,26 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-app.use(cors());
+const allowedOrigins = [
+  "https://ledger-nu-one.vercel.app",
+  "https://ledger-git-main-navneets-projects-9678f707.vercel.app",
+  "https://ledger-dkq47mr9h-navneets-projects-9678f707.vercel.app",
+  "http://localhost:5173", // for local development
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 // ---------------- DB Connection ----------------
